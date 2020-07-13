@@ -7,14 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12'
-      - name: Run npm install
-        run: npm install --dotenv-extended
-      - name: Run npm install -g dotenv
-        run: npm install -g dotenv
       - name: Update BON4S README.md
         uses: BON4S/BON4S@master
         env:

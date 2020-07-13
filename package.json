@@ -9,9 +9,11 @@
     "url": "git+https://github.com/BON4S/BON4S.git"
   },
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "build": "ncc build src/index.js --out dist --minify"
   },
   "dependencies": {
+    "@zeit/ncc": "^0.22.3",
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "imagemagick": "^0.1.3",
