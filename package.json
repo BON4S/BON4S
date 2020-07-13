@@ -4,6 +4,10 @@
   "author": "BON4S",
   "description": "GitHub readme.md",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BON4S/BON4S.git"
+  },
   "scripts": {
     "start": "node src/index.js"
   },

@@ -12,7 +12,7 @@ jobs:
         with:
           node-version: '12'
       - name: Run npm install
-        run: npm install
+        run: npm install --dotenv-extended
       - name: Update BON4S README.md
         uses: BON4S/BON4S@master
         env:
