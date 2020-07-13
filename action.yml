@@ -1,0 +1,8 @@
+name: 'bonas-readme'
+description: 'Update BON4S README.md'
+branding:
+  icon: 'clipboard'
+  color: 'blue'
+runs:
+  using: 'node12'
+  main: 'src/index.js'
