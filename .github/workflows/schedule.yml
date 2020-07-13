@@ -7,8 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - run: npm install
       - name: Update BON4S README.md
+      - run: npm install
         uses: BON4S/BON4S@master
         env:
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
