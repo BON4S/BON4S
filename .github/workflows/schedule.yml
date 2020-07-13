@@ -3,11 +3,10 @@ on:
   schedule:
     - cron: '*/30 * * * *'
 jobs:
-  update-gist:
+  update-readme:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - run: npm install
       - name: Update BON4S README.md
         uses: BON4S/BON4S@master
         env:
