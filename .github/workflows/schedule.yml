@@ -8,6 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Update BON4S README.md
+      - run: npm install
         uses: BON4S/BON4S@master
         run: npm install
         env:
