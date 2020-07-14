@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/BON4S/#👽">
-    <img src="https://github.com/BON4S/BON4S/blob/master/src/assets/readmeImage.png">
+    <img src="https://github.com/BON4S/BON4S/blob/master/assets/images/readmeImage.png">
   </a>
 </p>
 <p align="right">

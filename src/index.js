@@ -4,7 +4,7 @@ const Twit = require('twit');
 
 const { WakaTimeClient, RANGE } = require('wakatime-client');
 
-const quotesData = require('./quotes-data.json');
+const quotesData = require('../assets/quotes-data.json');
 
 const {
   WAKATIME_API_KEY: wakatimeApiKey,
@@ -103,7 +103,7 @@ async function createTwitterImage(twitterAccount, numberOfTweets) {
         '-define',
         'pango:justify=true',
         `pango:${formattedTweetsContent}`,
-        './src/assets/03.png',
+        './assets/images/03.png',
       ],
       function (error) {
         error && console.error(error);
@@ -146,7 +146,7 @@ async function createMostUsedLanguagesImage() {
       '-font',
       `${fontFamily}`,
       `pango:${await handleProgrammingLanguageMetricsData()}`,
-      './src/assets/01.png',
+      './assets/images/01.png',
     ],
     function (error) {
       error && console.error(error);
@@ -187,7 +187,7 @@ async function createQuoteImage() {
       `${borderColor}`,
       '-border',
       `${borderSize}`,
-      './src/assets/02.png',
+      './assets/images/02.png',
     ],
     function (error) {
       error && console.error(error);
@@ -198,11 +198,11 @@ async function createQuoteImage() {
 async function createReadmeImage() {
   imageMagick.convert(
     [
-      './src/assets/01.png',
-      './src/assets/02.png',
-      './src/assets/03.png',
+      './assets/images/01.png',
+      './assets/images/02.png',
+      './assets/images/03.png',
       '+append',
-      './src/assets/readmeImage.png',
+      './assets/readmeImage.png',
     ],
     function (error) {
       error && console.error(error);
