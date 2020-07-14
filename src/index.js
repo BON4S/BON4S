@@ -24,7 +24,7 @@ const twitter = new Twit({
   access_token_secret: twitterAccessTokenSecret,
 });
 
-const quotesData = require(`${workspace}/quotes-data.json`);
+const quotesData = require('../assets/quotes-data.json');
 
 const image01 = path.resolve(workspace, 'assets', 'images', '01.png');
 const image02 = path.resolve(workspace, 'assets', 'images', '02.png');
