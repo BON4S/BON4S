@@ -13,6 +13,7 @@
     "build": "ncc build src/index.js --out dist --minify"
   },
   "dependencies": {
+    "@actions/core": "^1.2.4",
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "imagemagick": "^0.1.3",

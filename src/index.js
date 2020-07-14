@@ -1,4 +1,6 @@
 require('dotenv').config();
+const core = require('@actions/core');
+const path = require('path');
 const imageMagick = require('imagemagick');
 const Twit = require('twit');
 
@@ -12,6 +14,7 @@ const {
   TWITTER_API_SECRET_KEY: twitterApiSecretKey,
   TWITTER_ACCESS_TOKEN: twitterAccessToken,
   TWITTER_ACCESS_TOKEN_SECRET: twitterAccessTokenSecret,
+  WORKSPACE_PATH: workspace,
 } = process.env;
 
 const twitter = new Twit({
@@ -20,6 +23,16 @@ const twitter = new Twit({
   access_token: twitterAccessToken,
   access_token_secret: twitterAccessTokenSecret,
 });
+
+const image01 = path.resolve(workspace, 'assets', 'images', '01.png');
+const image02 = path.resolve(workspace, 'assets', 'images', '02.png');
+const image03 = path.resolve(workspace, 'assets', 'images', '03.png');
+const readmeImage = path.resolve(
+  workspace,
+  'assets',
+  'images',
+  'readmeImage.png',
+);
 
 const wakatime = new WakaTimeClient(wakatimeApiKey);
 
@@ -103,7 +116,7 @@ async function createTwitterImage(twitterAccount, numberOfTweets) {
         '-define',
         'pango:justify=true',
         `pango:${formattedTweetsContent}`,
-        './assets/images/03.png',
+        `${image03}`,
       ],
       function (error) {
         error && console.error(error);
@@ -146,7 +159,7 @@ async function createMostUsedLanguagesImage() {
       '-font',
       `${fontFamily}`,
       `pango:${await handleProgrammingLanguageMetricsData()}`,
-      './assets/images/01.png',
+      `${image01}`,
     ],
     function (error) {
       error && console.error(error);
@@ -187,7 +200,7 @@ async function createQuoteImage() {
       `${borderColor}`,
       '-border',
       `${borderSize}`,
-      './assets/images/02.png',
+      `${image02}`,
     ],
     function (error) {
       error && console.error(error);
@@ -197,13 +210,7 @@ async function createQuoteImage() {
 
 async function createReadmeImage() {
   imageMagick.convert(
-    [
-      './assets/images/01.png',
-      './assets/images/02.png',
-      './assets/images/03.png',
-      '+append',
-      './assets/readmeImage.png',
-    ],
+    [`${image01}`, `${image02}`, `${image03}`, '+append', `${readmeImage}`],
     function (error) {
       error && console.error(error);
     },
@@ -211,10 +218,14 @@ async function createReadmeImage() {
 }
 
 (async () => {
-  await createMostUsedLanguagesImage();
-  await createQuoteImage();
-  await createTwitterImage('BonasRodrigo', '1');
-  setTimeout(async () => {
-    await createReadmeImage();
-  }, 7000);
+  try {
+    await createMostUsedLanguagesImage();
+    await createQuoteImage();
+    await createTwitterImage('BonasRodrigo', '1');
+    setTimeout(async () => {
+      await createReadmeImage();
+    }, 7000);
+  } catch (error) {
+    core.setFailed(error.message);
+  }
 })();
