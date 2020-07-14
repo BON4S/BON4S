@@ -6,7 +6,7 @@ const Twit = require('twit');
 
 const { WakaTimeClient, RANGE } = require('wakatime-client');
 
-const quotesData = require('../assets/quotes-data.json');
+core.info('TEST !');
 
 const {
   WAKATIME_API_KEY: wakatimeApiKey,
@@ -23,6 +23,8 @@ const twitter = new Twit({
   access_token: twitterAccessToken,
   access_token_secret: twitterAccessTokenSecret,
 });
+
+const quotesData = require(`${workspace}/quotes-data.json`);
 
 const image01 = path.resolve(workspace, 'assets', 'images', '01.png');
 const image02 = path.resolve(workspace, 'assets', 'images', '02.png');
@@ -63,35 +65,39 @@ function generateBarChart(percent, barSize) {
 }
 
 async function handleProgrammingLanguageMetricsData() {
-  const stats = await wakatime.getMyStats({ range: RANGE.LAST_7_DAYS });
+  try {
+    const stats = await wakatime.getMyStats({ range: RANGE.LAST_7_DAYS });
 
-  let title = 'Most used languages  🖳  <small>(last 7 days)</small>';
+    let title = 'Most used languages  🖳  <small>(last 7 days)</small>';
 
-  let lines = [];
+    let lines = [];
 
-  for (let i = 0; i < Math.min(stats.data.languages.length, 5); i++) {
-    let data = stats.data.languages[i];
-    let { name, percent, text: time } = data;
+    for (let i = 0; i < Math.min(stats.data.languages.length, 5); i++) {
+      let data = stats.data.languages[i];
+      let { name, percent, text: time } = data;
 
-    let line = [
-      ` <span><small>${generateBarChart(
-        percent,
-        12,
-      )}  <small>${name}   <span fgcolor="#999">${
-        String(percent.toFixed(1)) + '%'
-      }   <small>${time}</small></span></small></small></span>\n`,
-    ];
+      let line = [
+        ` <span><small>${generateBarChart(
+          percent,
+          12,
+        )}  <small>${name}   <span fgcolor="#999">${
+          String(percent.toFixed(1)) + '%'
+        }   <small>${time}</small></span></small></small></span>\n`,
+      ];
 
-    lines.push(line);
-  }
+      lines.push(line);
+    }
 
-  if (lines.length == 0) {
-    lines = '<small>No data for the last 7 days. :(</small>';
-  }
+    if (lines.length == 0) {
+      lines = '<small>No data for the last 7 days. :(</small>';
+    }
 
-  return `
+    return `
     <span rise="-20480"><small>${title}</small></span>
  <span>${lines.join(' ')}</span>`;
+  } catch (error) {
+    core.setFailed(error.message);
+  }
 }
 
 async function createTwitterImage(twitterAccount, numberOfTweets) {
@@ -103,6 +109,99 @@ async function createTwitterImage(twitterAccount, numberOfTweets) {
   numberOfTweets === '1' && (titleContent = 'Last tweet');
 
   async function handleCreateTwitterImage() {
+    try {
+      imageMagick.convert(
+        [
+          '-size',
+          `200x${heightSize}`,
+          '-background',
+          `${backgroundColor}`,
+          '-fill',
+          `${foregroundColor}`,
+          '-font',
+          `${fontFamily}`,
+          '-define',
+          'pango:justify=true',
+          `pango:${formattedTweetsContent}`,
+          `${image03}`,
+        ],
+        function (error) {
+          error && core.error(`>>> Error! ${err}`);
+        },
+      );
+    } catch (error) {
+      core.setFailed(error.message);
+    }
+  }
+
+  try {
+    twitter.get(
+      'statuses/user_timeline',
+      { screen_name: twitterAccount, count: numberOfTweets },
+      async (err, data, response) => {
+        if (!err) {
+          data.forEach((tweet) => {
+            tweetContent =
+              tweetContent +
+              `${marks} <span fgcolor="#444">${tweet.text}</span>\n`;
+          });
+
+          formattedTweetsContent = `
+<span rise="-20480"><small>${titleContent}  <small>${dateContent}</small></small></span>\n
+<span rise="6000"><small><small>${tweetContent}</small></small></span>
+`;
+          await handleCreateTwitterImage();
+        } else {
+          core.error(`>>> Error! ${err}`);
+        }
+      },
+    );
+  } catch (error) {
+    core.setFailed(error.message);
+  }
+}
+
+async function createMostUsedLanguagesImage() {
+  try {
+    imageMagick.convert(
+      [
+        '-size',
+        `360x${heightSize}`,
+        '-background',
+        `${backgroundColor}`,
+        '-fill',
+        `${foregroundColor}`,
+        '-font',
+        `${fontFamily}`,
+        `pango:${await handleProgrammingLanguageMetricsData()}`,
+        `${image01}`,
+      ],
+      function (error) {
+        error && core.error(`>>> Error! ${err}`);
+      },
+    );
+  } catch (error) {
+    core.setFailed(error.message);
+  }
+}
+
+async function createQuoteImage() {
+  try {
+    let ramdomQuote =
+      quotesData.quotes[Math.floor(Math.random() * quotesData.quotes.length)];
+    let quoteAuthor = ramdomQuote[0];
+    let quoteContent = ramdomQuote[1];
+
+    let titleContent = 'Random Quote 💬';
+    let dateContent = `<span rise="-19500" fgcolor="#aaa"><small>${date}</small></span>`;
+    let authorText = `<span fgcolor="#444">${quoteAuthor}</span>`;
+    let marks = `<span fgcolor="#005DC6"><b>"</b></span>`;
+    let quoteText = `${marks}<span fgcolor="#555">${quoteContent}</span>${marks}`;
+    let formattedQuoteText = `
+<span rise="-20480"><small>${titleContent}  <small>${dateContent}</small></small></span>\n
+<span rise="6000"><small><small><i>${quoteText}</i>  ${authorText}</small></small></span>
+`;
+
     imageMagick.convert(
       [
         '-size',
@@ -115,106 +214,33 @@ async function createTwitterImage(twitterAccount, numberOfTweets) {
         `${fontFamily}`,
         '-define',
         'pango:justify=true',
-        `pango:${formattedTweetsContent}`,
-        `${image03}`,
+        `pango:${formattedQuoteText}`,
+        '-bordercolor',
+        `${borderColor}`,
+        '-border',
+        `${borderSize}`,
+        `${image02}`,
       ],
       function (error) {
-        error && console.error(error);
+        error && core.error(`>>> Error! ${err}`);
       },
     );
+  } catch (error) {
+    core.setFailed(error.message);
   }
-
-  twitter.get(
-    'statuses/user_timeline',
-    { screen_name: twitterAccount, count: numberOfTweets },
-    async (err, data, response) => {
-      if (!err) {
-        data.forEach((tweet) => {
-          tweetContent =
-            tweetContent +
-            `${marks} <span fgcolor="#444">${tweet.text}</span>\n`;
-        });
-
-        formattedTweetsContent = `
-<span rise="-20480"><small>${titleContent}  <small>${dateContent}</small></small></span>\n
-<span rise="6000"><small><small>${tweetContent}</small></small></span>
-`;
-        await handleCreateTwitterImage();
-      } else {
-        console.error('>>> Twitter error!\n', err);
-      }
-    },
-  );
-}
-
-async function createMostUsedLanguagesImage() {
-  imageMagick.convert(
-    [
-      '-size',
-      `360x${heightSize}`,
-      '-background',
-      `${backgroundColor}`,
-      '-fill',
-      `${foregroundColor}`,
-      '-font',
-      `${fontFamily}`,
-      `pango:${await handleProgrammingLanguageMetricsData()}`,
-      `${image01}`,
-    ],
-    function (error) {
-      error && console.error(error);
-    },
-  );
-}
-
-async function createQuoteImage() {
-  let ramdomQuote =
-    quotesData.quotes[Math.floor(Math.random() * quotesData.quotes.length)];
-  let quoteAuthor = ramdomQuote[0];
-  let quoteContent = ramdomQuote[1];
-
-  let titleContent = 'Random Quote 💬';
-  let dateContent = `<span rise="-19500" fgcolor="#aaa"><small>${date}</small></span>`;
-  let authorText = `<span fgcolor="#444">${quoteAuthor}</span>`;
-  let marks = `<span fgcolor="#005DC6"><b>"</b></span>`;
-  let quoteText = `${marks}<span fgcolor="#555">${quoteContent}</span>${marks}`;
-  let formattedQuoteText = `
-<span rise="-20480"><small>${titleContent}  <small>${dateContent}</small></small></span>\n
-<span rise="6000"><small><small><i>${quoteText}</i>  ${authorText}</small></small></span>
-`;
-
-  imageMagick.convert(
-    [
-      '-size',
-      `200x${heightSize}`,
-      '-background',
-      `${backgroundColor}`,
-      '-fill',
-      `${foregroundColor}`,
-      '-font',
-      `${fontFamily}`,
-      '-define',
-      'pango:justify=true',
-      `pango:${formattedQuoteText}`,
-      '-bordercolor',
-      `${borderColor}`,
-      '-border',
-      `${borderSize}`,
-      `${image02}`,
-    ],
-    function (error) {
-      error && console.error(error);
-    },
-  );
 }
 
 async function createReadmeImage() {
-  imageMagick.convert(
-    [`${image01}`, `${image02}`, `${image03}`, '+append', `${readmeImage}`],
-    function (error) {
-      error && console.error(error);
-    },
-  );
+  try {
+    imageMagick.convert(
+      [`${image01}`, `${image02}`, `${image03}`, '+append', `${readmeImage}`],
+      function (error) {
+        error && core.error(`>>> Error! ${err}`);
+      },
+    );
+  } catch (error) {
+    core.setFailed(error.message);
+  }
 }
 
 (async () => {
