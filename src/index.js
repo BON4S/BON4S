@@ -1,12 +1,10 @@
 require('dotenv').config();
 const core = require('@actions/core');
-const path = require('path');
+
 const imageMagick = require('imagemagick');
 const Twit = require('twit');
 
 const { WakaTimeClient, RANGE } = require('wakatime-client');
-
-core.info('TEST !');
 
 const {
   WAKATIME_API_KEY: wakatimeApiKey,
@@ -24,17 +22,12 @@ const twitter = new Twit({
   access_token_secret: twitterAccessTokenSecret,
 });
 
-const quotesData = require('../assets/quotes-data.json');
+const quotesData = require('../data/quotes-data.json');
 
-const image01 = path.resolve(workspace, 'assets', 'images', '01.png');
-const image02 = path.resolve(workspace, 'assets', 'images', '02.png');
-const image03 = path.resolve(workspace, 'assets', 'images', '03.png');
-const readmeImage = path.resolve(
-  workspace,
-  'assets',
-  'images',
-  'readmeImage.png',
-);
+const image01 = `${workspace}/assets/images/01.png`;
+const image02 = `${workspace}/assets/images/02.png`;
+const image03 = `${workspace}/assets/images/03.png`;
+const readmeImage = `${workspace}/assets/images/readmeImage.png`;
 
 const wakatime = new WakaTimeClient(wakatimeApiKey);
 
@@ -68,7 +61,7 @@ async function handleProgrammingLanguageMetricsData() {
   try {
     const stats = await wakatime.getMyStats({ range: RANGE.LAST_7_DAYS });
 
-    let title = 'Most used languages  🖳  <small>(last 7 days)</small>';
+    let title = 'Most used languages  <small>(last 7 days)</small>';
 
     let lines = [];
 
@@ -93,15 +86,15 @@ async function handleProgrammingLanguageMetricsData() {
     }
 
     return `
-    <span rise="-20480"><small>${title}</small></span>
- <span>${lines.join(' ')}</span>`;
+    <span rise="-4000"><small>${title}</small></span>
+ <span rise="-10000">${lines.join(' ')}</span>`;
   } catch (error) {
-    core.setFailed(error.message);
+    core.error(error.message);
   }
 }
 
 async function createTwitterImage(twitterAccount, numberOfTweets) {
-  let dateContent = `<span rise="-19500" fgcolor="#aaa"><small>${date}</small></span>`;
+  let dateContent = `<span rise="-4000" fgcolor="#aaa"><small>${date}</small></span>`;
   let marks = `<span fgcolor="#005DC6"><b>•</b></span>`;
   let tweetContent = '';
   let formattedTweetsContent = '';
@@ -126,11 +119,11 @@ async function createTwitterImage(twitterAccount, numberOfTweets) {
           `${image03}`,
         ],
         function (error) {
-          error && core.error(`>>> Error! ${err}`);
+          error && core.error(`>>> Error! ${error}`);
         },
       );
     } catch (error) {
-      core.setFailed(error.message);
+      core.error(error.message);
     }
   }
 
@@ -147,7 +140,7 @@ async function createTwitterImage(twitterAccount, numberOfTweets) {
           });
 
           formattedTweetsContent = `
-<span rise="-20480"><small>${titleContent}  <small>${dateContent}</small></small></span>\n
+<span rise="-4000"><small>${titleContent}  <small>${dateContent}</small></small></span>\n
 <span rise="6000"><small><small>${tweetContent}</small></small></span>
 `;
           await handleCreateTwitterImage();
@@ -157,7 +150,7 @@ async function createTwitterImage(twitterAccount, numberOfTweets) {
       },
     );
   } catch (error) {
-    core.setFailed(error.message);
+    core.error(error.message);
   }
 }
 
@@ -177,11 +170,11 @@ async function createMostUsedLanguagesImage() {
         `${image01}`,
       ],
       function (error) {
-        error && core.error(`>>> Error! ${err}`);
+        error && core.error(`>>> Error! ${error}`);
       },
     );
   } catch (error) {
-    core.setFailed(error.message);
+    core.error(error.message);
   }
 }
 
@@ -192,14 +185,14 @@ async function createQuoteImage() {
     let quoteAuthor = ramdomQuote[0];
     let quoteContent = ramdomQuote[1];
 
-    let titleContent = 'Random Quote 💬';
-    let dateContent = `<span rise="-19500" fgcolor="#aaa"><small>${date}</small></span>`;
+    let titleContent = 'Random Quote';
+    let dateContent = `<span rise="-4000" fgcolor="#aaa"><small>${date}</small></span>`;
     let authorText = `<span fgcolor="#444">${quoteAuthor}</span>`;
     let marks = `<span fgcolor="#005DC6"><b>"</b></span>`;
     let quoteText = `${marks}<span fgcolor="#555">${quoteContent}</span>${marks}`;
     let formattedQuoteText = `
-<span rise="-20480"><small>${titleContent}  <small>${dateContent}</small></small></span>\n
-<span rise="6000"><small><small><i>${quoteText}</i>  ${authorText}</small></small></span>
+<span rise="-4000"><small>${titleContent}  <small>${dateContent}</small></small></span>\n
+<span rise="8000"><small><small><i>${quoteText}</i>  ${authorText}</small></small></span>
 `;
 
     imageMagick.convert(
@@ -222,11 +215,11 @@ async function createQuoteImage() {
         `${image02}`,
       ],
       function (error) {
-        error && core.error(`>>> Error! ${err}`);
+        error && core.error(`>>> Error! ${error}`);
       },
     );
   } catch (error) {
-    core.setFailed(error.message);
+    core.error(error.message);
   }
 }
 
@@ -235,11 +228,11 @@ async function createReadmeImage() {
     imageMagick.convert(
       [`${image01}`, `${image02}`, `${image03}`, '+append', `${readmeImage}`],
       function (error) {
-        error && core.error(`>>> Error! ${err}`);
+        error && core.error(`>>> Error! ${error}`);
       },
     );
   } catch (error) {
-    core.setFailed(error.message);
+    core.error(error.message);
   }
 }
 
@@ -252,6 +245,6 @@ async function createReadmeImage() {
       await createReadmeImage();
     }, 7000);
   } catch (error) {
-    core.setFailed(error.message);
+    core.error(error.message);
   }
 })();

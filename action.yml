@@ -1,8 +1,0 @@
-name: update-readme
-description: 'Update BON4S README.md'
-branding:
-  icon: 'clipboard'
-  color: 'blue'
-runs:
-  using: 'node12'
-  main: 'dist/index.js'

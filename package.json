@@ -9,8 +9,7 @@
     "url": "git+https://github.com/BON4S/BON4S.git"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "build": "ncc build src/index.js --out dist --minify"
+    "start": "node src/index.js"
   },
   "dependencies": {
     "@actions/core": "^1.2.4",
@@ -21,7 +20,6 @@
     "wakatime-client": "^2.6.0"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.22.3",
     "prettier": "^2.0.5"
   }
 }
