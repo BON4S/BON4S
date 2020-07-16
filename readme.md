@@ -10,8 +10,8 @@
   <a href="https://twitter.com/BonasRodrigo/#👽" aria-label="Twitter">
     <img alt="Twitter" src="https://img.shields.io/badge/-Twitter-bbbbbb?style=for-the-badge&color=bbbbbb&labelColor=bbbbbb&logoColor=ffffff&logo=twitter&cacheSeconds=7200&link=https://twitter.com/BonasRodrigo">
   </a>
-  <a href="https://www.youtube.com/channel/UCQGbCFV8n5-AG5IgYkCi1uQ#👽" aria-label="YouTube">
-    <img alt="YouTube" src="https://img.shields.io/badge/-YouTube-bbbbbb?style=for-the-badge&color=bbbbbb&labelColor=bbbbbb&logoColor=ffffff&logo=youtube&cacheSeconds=7200&link=https://www.youtube.com/channel/UCQGbCFV8n5-AG5IgYkCi1uQ">
+  <a href="https://www.youtube.com/channel/UCcEbzUP3OBFGEyFDachdwzg#👽" aria-label="YouTube">
+    <img alt="YouTube" src="https://img.shields.io/badge/-YouTube-bbbbbb?style=for-the-badge&color=bbbbbb&labelColor=bbbbbb&logoColor=ffffff&logo=youtube&cacheSeconds=7200&link=https://www.youtube.com/channel/UCcEbzUP3OBFGEyFDachdwzg">
   </a>
   <a href="https://www.twitch.tv/rodrigobonas/#👽" aria-label="Twitch">
     <img alt="Twitch" src="https://img.shields.io/badge/-Twitch-bbbbbb?style=for-the-badge&color=bbbbbb&labelColor=bbbbbb&logoColor=ffffff&logo=twitch&cacheSeconds=7200&link=https://www.twitch.tv/rodrigobonas/">
