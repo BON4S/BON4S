@@ -140,7 +140,7 @@ async function createTwitterImage(twitterAccount, numberOfTweets) {
           });
 
           formattedTweetsContent = `
-<span rise="-4000"><small>${titleContent}  <small>${dateContent}</small></small></span>\n
+<span rise="-4000"><small>${titleContent}</small></span>\n
 <span rise="6000"><small><small>${tweetContent}</small></small></span>
 `;
           await handleCreateTwitterImage();
