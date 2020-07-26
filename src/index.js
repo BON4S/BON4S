@@ -155,6 +155,17 @@ async function createTwitterImage(twitterAccount, numberOfTweets) {
 }
 
 async function createMostUsedLanguagesImage() {
+  let languageMetricsData = await handleProgrammingLanguageMetricsData();
+  
+  if (
+    languageMetricsData === 'undefined' ||
+    languageMetricsData === '' ||
+    languageMetricsData === undefined ||
+    languageMetricsData === null
+  ) {
+    return;
+  }
+  
   try {
     imageMagick.convert(
       [
@@ -166,7 +177,7 @@ async function createMostUsedLanguagesImage() {
         `${foregroundColor}`,
         '-font',
         `${fontFamily}`,
-        `pango:${await handleProgrammingLanguageMetricsData()}`,
+        `pango:${languageMetricsData}`,
         `${image01}`,
       ],
       function (error) {
