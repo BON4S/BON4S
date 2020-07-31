@@ -61,7 +61,7 @@ async function handleProgrammingLanguageMetricsData() {
   try {
     const stats = await wakatime.getMyStats({ range: RANGE.LAST_7_DAYS });
 
-    let title = 'Most used languages  <small>(last 7 days)</small>';
+    let title = ' Most used languages  <small>(last 7 days)</small>';
 
     let lines = [];
 
@@ -70,7 +70,7 @@ async function handleProgrammingLanguageMetricsData() {
       let { name, percent, text: time } = data;
 
       let line = [
-        ` <span><small>${generateBarChart(
+        `<span><small>${generateBarChart(
           percent,
           12,
         )}  <small>${name}   <span fgcolor="#999">${
@@ -95,6 +95,7 @@ async function handleProgrammingLanguageMetricsData() {
 
 async function createTwitterImage(twitterAccount, numberOfTweets) {
   let dateContent = `<span rise="-4000" fgcolor="#aaa"><small>${date}</small></span>`;
+  let twitterAccountName = `<span rise="-4000" fgcolor="#aaa"><small>@${twitterAccount}</small></span>`;
   let marks = `<span fgcolor="#005DC6"><b>•</b></span>`;
   let tweetContent = '';
   let formattedTweetsContent = '';
@@ -135,12 +136,11 @@ async function createTwitterImage(twitterAccount, numberOfTweets) {
         if (!err) {
           data.forEach((tweet) => {
             tweetContent =
-              tweetContent +
-              `${marks} <span fgcolor="#444">${tweet.text}</span>\n`;
+              tweetContent + `<span fgcolor="#444">${tweet.text}</span>\n`;
           });
 
           formattedTweetsContent = `
-<span rise="-4000"><small>${titleContent}</small></span>\n
+<span rise="-4000"><small>${titleContent}  ${twitterAccountName}</small></span>\n
 <span rise="6000"><small><small>${tweetContent}</small></small></span>
 `;
           await handleCreateTwitterImage();
@@ -156,7 +156,7 @@ async function createTwitterImage(twitterAccount, numberOfTweets) {
 
 async function createMostUsedLanguagesImage() {
   let languageMetricsData = await handleProgrammingLanguageMetricsData();
-  
+
   if (
     languageMetricsData === 'undefined' ||
     languageMetricsData === '' ||
@@ -165,7 +165,7 @@ async function createMostUsedLanguagesImage() {
   ) {
     return;
   }
-  
+
   try {
     imageMagick.convert(
       [
