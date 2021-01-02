@@ -26,8 +26,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-      - name: Git pull
-        run: git pull
+      - name: Git reset
+        run: git reset --hard origin/master
       - name: Update BON4S readme.md
         run: node src/index.js
         env:
