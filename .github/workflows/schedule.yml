@@ -22,7 +22,7 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(env) }}
         run: echo "$GITHUB_CONTEXT"
-      - name: Config config
+      - name: Git config
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
