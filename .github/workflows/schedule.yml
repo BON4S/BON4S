@@ -22,6 +22,12 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(env) }}
         run: echo "$GITHUB_CONTEXT"
+      - name: Config config
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      - name: Git pull
+        run: git pull
       - name: Update BON4S readme.md
         run: node src/index.js
         env:
@@ -32,10 +38,7 @@ jobs:
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
           WORKSPACE_PATH: ${{ env.workspace }}
       - name: Commit files
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -m "[GITHUB-ACTIONS] Automatic readme update." -a
+        run: git commit -m "[GITHUB-ACTIONS] Automatic readme update." -a
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
